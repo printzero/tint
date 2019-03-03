@@ -1,4 +1,4 @@
-package mod
+package tint
 
 // Tint struct holds the whole library
 type Tint struct {

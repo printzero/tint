@@ -1,6 +1,6 @@
-# Tint: cli color module for go
-
 <img src="https://raw.githubusercontent.com/printzero/tint/master/assets/tint_logo.png" width="400" height="225">
+
+Tint: cli color module for go
 
 ### Import
 

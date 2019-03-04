@@ -2,6 +2,7 @@ package tint
 
 import (
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -16,12 +17,24 @@ type Tint struct {
 type TerminalLevel int
 
 // Color Default that support the terminal
-type Color string
+type color int
 
 const (
 	// Black color brackets in ansi format
-	Black Color = "[test:test]"
+	Black color = iota
+	// Cyan color
+	Cyan
+	// BgWhite background
+	BgWhite
 )
+
+var colorMap = map[color]string{
+	// Black
+	0: "\u001B[30m:\u001B[39m",
+	// Cyan
+	1: "\u001B[36m:\u001B[39m",
+	2: "\u001B[47m:\u001B[49m",
+}
 
 const (
 	// None for terminal that supports no colot
@@ -44,13 +57,25 @@ func Init() *Tint {
 }
 
 // Print single line of text with specified color
-func (t *Tint) Print(text string, color string) {
-	brackets := strings.Split(color, ":")
-	fmt.Print(brackets[0] + text + brackets[1])
+func (t *Tint) Print(text string, colors ...color) {
+	fmt.Print(apply(text, colors))
 }
 
 // Println single line of text with enter character
-func (t *Tint) Println(text string, color string) {
-	brackets := strings.Split(color, ":")
-	fmt.Println(brackets[0] + text + brackets[1])
+func (t *Tint) Println(text string, colors ...color) {
+	fmt.Println(apply(text, colors))
+}
+
+// Log text with the standard lib log module
+func (t *Tint) Log(text string, colors ...color) {
+	log.Print(apply(text, colors))
+}
+
+func apply(text string, colors []color) string {
+	output := text
+	for _, c := range colors {
+		brackets := strings.Split(colorMap[c], ":")
+		output = brackets[0] + output + brackets[1]
+	}
+	return output
 }

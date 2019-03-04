@@ -56,6 +56,11 @@ func Init() *Tint {
 	}
 }
 
+// Raw returns the raw string with applied colors
+func (t *Tint) Raw(text string, colors ...color) string {
+	return apply(text, colors)
+}
+
 // Print single line of text with specified color
 func (t *Tint) Print(text string, colors ...color) {
 	fmt.Print(apply(text, colors))

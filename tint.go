@@ -47,21 +47,21 @@ var colorMap = map[color]string{
 }
 
 const (
-	// None for terminal that supports no colot
-	None TerminalLevel = iota + 1
-	// Color16bit for terminal that supports 16bit colors
-	Color16bit
-	// Color256 for terminal that supports 256 bit colors
-	Color256
-	// Color16m for terminal that supports 16 million colors (truecolor)
-	Color16m
+	// LevelNone for terminal that supports no colot
+	LevelNone TerminalLevel = iota + 1
+	// Level16bit for terminal that supports 16bit colors
+	Level16bit
+	// Level256 for terminal that supports 256 bit colors
+	Level256
+	// Level16m for terminal that supports 16 million colors (truecolor)
+	Level16m
 )
 
 // Init initializes variables that tint uses and then returns the
 // pointer to a Tint struct
 func Init() *Tint {
 	return &Tint{
-		Level:         None,
+		Level:         LevelNone,
 		SupportsColor: false,
 	}
 }

@@ -112,6 +112,7 @@ func (t *Tint) With(text string, colors ...color) Mixin {
 	}
 }
 
+// apply the colors to the text by wrapping text with ANSI styling
 func apply(text string, colors []color) string {
 	output := text
 	for _, c := range colors {

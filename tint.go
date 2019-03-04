@@ -19,9 +19,17 @@ type TerminalLevel int
 // Color Default that support the terminal
 type color int
 
+// Mixin helps bind a color to a specific text
+type Mixin struct {
+	text   string
+	colors []color
+}
+
 const (
+	// Normal equates to no style
+	Normal color = iota
 	// Black color brackets in ansi format
-	Black color = iota
+	Black
 	// Cyan color
 	Cyan
 	// BgWhite background
@@ -29,11 +37,13 @@ const (
 )
 
 var colorMap = map[color]string{
+	// Normal
+	0: ":",
 	// Black
-	0: "\u001B[30m:\u001B[39m",
+	1: "\u001B[30m:\u001B[39m",
 	// Cyan
-	1: "\u001B[36m:\u001B[39m",
-	2: "\u001B[47m:\u001B[49m",
+	2: "\u001B[36m:\u001B[39m",
+	3: "\u001B[47m:\u001B[49m",
 }
 
 const (
@@ -74,6 +84,32 @@ func (t *Tint) Println(text string, colors ...color) {
 // Log text with the standard lib log module
 func (t *Tint) Log(text string, colors ...color) {
 	log.Print(apply(text, colors))
+}
+
+// Palette lets you build a string with specific words with different
+// background or foreground color of your choice
+// NOTE: no need to specify space character at end of mixin
+func (t *Tint) Palette(mixins ...Mixin) string {
+	output := ""
+
+	// for each mixins in this palette
+	for i, m := range mixins {
+		if i == 0 {
+			output = apply(m.text, m.colors)
+		} else {
+			output = output + " " + apply(m.text, m.colors)
+		}
+	}
+
+	return output
+}
+
+// With is used to build a Mixin with text and color
+func (t *Tint) With(text string, colors ...color) Mixin {
+	return Mixin{
+		text,
+		colors,
+	}
 }
 
 func apply(text string, colors []color) string {

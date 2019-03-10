@@ -30,10 +30,20 @@ const (
 	Normal color = iota
 	// Black color brackets in ansi format
 	Black
+	// Red color
+	Red
+	// Green color
+	Green
+	// Yellow color
+	Yellow
+	// Blue color
+	Blue
+	// Magenta color
+	Magenta
 	// Cyan color
 	Cyan
-	// BgWhite background
-	BgWhite
+	// White color
+	White
 )
 
 var colorMap = map[color]string{
@@ -41,9 +51,20 @@ var colorMap = map[color]string{
 	0: ":",
 	// Black
 	1: "\u001B[30m:\u001B[39m",
+	// Red
+	2: "\u001B[31m:\u001B[39m",
+	// Green
+	3: "\u001B[32m:\u001B[39m",
+	// Yellow
+	4: "\u001B[33m:\u001B[39m",
+	// Blue
+	5: "\u001B[34m:\u001B[39m",
+	// Magenta
+	6: "\u001B[35m:\u001B[39m",
 	// Cyan
-	2: "\u001B[36m:\u001B[39m",
-	3: "\u001B[47m:\u001B[49m",
+	7: "\u001B[36m:\u001B[39m",
+	// White
+	8: "\u001B[37m:\u001B[39m",
 }
 
 const (

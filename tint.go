@@ -44,6 +44,39 @@ const (
 	Cyan
 	// White color
 	White
+	// BlackBright color
+	BlackBright
+	// RedBright color
+	RedBright
+	// GreenBright color
+	GreenBright
+	// YellowBright color
+	YellowBright
+	// BlueBright color
+	BlueBright
+	// MagentaBright color
+	MagentaBright
+	// CyanBright color
+	CyanBright
+	// WhiteBright color
+	WhiteBright
+
+	// BgBlack color
+	BgBlack
+	// BgRed color
+	BgRed
+	// BgGreen color
+	BgGreen
+	// BgYellow color
+	BgYellow
+	// BgBlue color
+	BgBlue
+	// BgMagenta color
+	BgMagenta
+	// BgCyan color
+	BgCyan
+	// BgWhite color
+	BgWhite
 )
 
 var colorMap = map[color]string{
@@ -64,7 +97,25 @@ var colorMap = map[color]string{
 	// Cyan
 	7: "\u001B[36m:\u001B[39m",
 	// White
-	8: "\u001B[37m:\u001B[39m",
+	8:  "\u001B[37m:\u001B[39m",
+	9:  "\u001B[90m:\u001B[39m",
+	10: "\u001B[91m:\u001B[39m",
+	11: "\u001B[92m:\u001B[39m",
+	12: "\u001B[93m:\u001B[39m",
+	13: "\u001B[94m:\u001B[39m",
+	14: "\u001B[95m:\u001B[39m",
+	15: "\u001B[96m:\u001B[39m",
+	16: "\u001B[97m:\u001B[39m",
+
+	// backgrounds
+	17: "\u001B[40m:\u001B[49m",
+	18: "\u001B[41m:\u001B[49m",
+	19: "\u001B[42m:\u001B[49m",
+	20: "\u001B[43m:\u001B[49m",
+	21: "\u001B[44m:\u001B[49m",
+	22: "\u001B[45m:\u001B[49m",
+	23: "\u001B[46m:\u001B[49m",
+	24: "\u001B[47m:\u001B[49m",
 }
 
 const (

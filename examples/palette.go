@@ -9,7 +9,7 @@ func main() {
 	t := tint.Init()
 	// palette example
 	fmt.Println(t.Palette(
-		t.With("Ashish Shekar", tint.Magenta),
+		t.With("Ashish Shekar", tint.Black, tint.BgYellow),
 		t.With("is an", tint.Normal),
 		t.With("awesome", tint.Cyan),
 		t.With("guy!", tint.Normal),

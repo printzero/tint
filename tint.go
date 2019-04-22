@@ -187,6 +187,16 @@ func (t *Tint) With(text string, colors ...color) Mixin {
 	}
 }
 
+// Swatch helps you create your own function with spesified color
+// Example:
+//
+//	green := tint.Swatch(tint.Green)
+func (t *Tint) Swatch(color color) func(text string) {
+	return func(text string) {
+		t.Println(text, color)
+	}
+}
+
 // apply the colors to the text by wrapping text with ANSI styling
 func apply(text string, colors []color) string {
 	output := text

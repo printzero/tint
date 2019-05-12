@@ -79,6 +79,8 @@ const (
 	BgWhite
 	// Hyperlink text
 	Hyperlink
+	// Dim text
+	Dim
 )
 
 var colorMap = map[color]string{
@@ -119,6 +121,9 @@ var colorMap = map[color]string{
 	23: "\u001B[46m:\u001B[49m",
 	24: "\u001B[47m:\u001B[49m",
 	25: "\u001B]8;;:\u0007link\u001B]8;;\u0007",
+
+	// attributes
+	26: "\u001B[2m:\u001B[0m",
 }
 
 const (

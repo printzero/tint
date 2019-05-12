@@ -44,7 +44,7 @@ It is always better to add a pull request with your ideas. This helps you add th
 
 > **NOTE:** Please start coding your idea once it is added to the trello board. This helps us align our goals of this project and does not add any idea that would need a bigger change and/or stop any other developments.
 
-* [Fork this project](https://github.com/printzero/tint) by clicking on the `Fork` button on the top right hand corner. Read [this section](https://github.com/printzero/tint/blob/master/CONTRIBUTING.md#dont-work-on-master) and proceed further.
+* [Fork this project](https://github.com/printzero/tint) by clicking on the `Fork` button on the top right hand corner. Read [this section](https://github.com/printzero/tint/blob/master/CONTIBUTING.md#dont-work-on-master) and proceed further.
 * Always [Create a pull request](https://github.com/printzero/tint/compare) to [develop](https://github.com/printzero/tint/tree/develop) branch so that we can add some tests to it before merging it to master.
 * Tests with pull request are always welcome. This is a single file project so write inside `tint_test.go`.
 * Create a pull request to merge inside `develop` branch.

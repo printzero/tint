@@ -6,7 +6,7 @@ Tint aims to provide functions that you can use to color your cli text output.
 
 ### Contributing to this project
 
-First step is to read the [contributing](https://github.com/printzero/tint/blob/master/CONTRIBUTING.md) and that is about it.
+First step is to read the [contributing](https://github.com/printzero/tint/blob/master/CONTIBUTING.md) and that is about it.
 
 ### Trello board
 

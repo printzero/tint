@@ -17,3 +17,7 @@ I use this trello [board](https://trello.com/b/Nqbp6qaQ/tint-development-roadmap
 ```bash
 go get github.com/printzero/tint
 ```
+
+### License
+
+This project is licensed under `Apache 2.0`

@@ -10,6 +10,7 @@ import (
 type Tint struct {
 	Level         TerminalLevel
 	SupportsColor bool
+	LogInstance   *log.Logger
 }
 
 // TerminalLevel of color support for terminal and how does tint
@@ -143,6 +144,7 @@ func Init() *Tint {
 	return &Tint{
 		Level:         LevelNone,
 		SupportsColor: false,
+		LogInstance:   &log.Logger{},
 	}
 }
 
@@ -163,7 +165,7 @@ func (t *Tint) Println(text string, colors ...color) {
 
 // Log text with the standard lib log module
 func (t *Tint) Log(text string, colors ...color) {
-	log.Print(apply(text, colors))
+	t.LogInstance.Println(apply(text, colors))
 }
 
 // Palette lets you build a string with specific words with different

@@ -196,9 +196,9 @@ func (t *Tint) With(text string, colors ...color) Mixin {
 // Example:
 //
 //	green := tint.Swatch(tint.Green)
-func (t *Tint) Swatch(color color) func(text string) {
+func (t *Tint) Swatch(colors ...color) func(text string) {
 	return func(text string) {
-		t.Println(text, color)
+		t.Println(text, colors...)
 	}
 }
 

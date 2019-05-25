@@ -204,6 +204,13 @@ func (t *Tint) Swatch(colors ...color) func(text string) {
 	}
 }
 
+// SwatchRaw returns a functions that returns a raw colored string
+func (t *Tint) SwatchRaw(colors ...color) func(text string) string {
+	return func(text string) string {
+		return t.Raw(text, colors...)
+	}
+}
+
 // apply the colors to the text by wrapping text with ANSI styling
 func apply(text string, colors []color) string {
 	output := text

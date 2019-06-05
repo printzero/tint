@@ -10,6 +10,7 @@ import (
 type Tint struct {
 	Level         TerminalLevel
 	SupportsColor bool
+	LogInstance   *log.Logger
 }
 
 // TerminalLevel of color support for terminal and how does tint
@@ -81,49 +82,54 @@ const (
 	Hyperlink
 	// Dim text
 	Dim
+
+	// internal constants
+	suffixBreaker     = "\u001B[39m"
+	suffixBgBreaker   = "\u001B[49m"
+	suffixAttrBreaker = "\u001B[0m"
 )
 
-var colorMap = map[color]string{
+var colorMap = []string{
 	// Normal
-	0: ":",
+	":=def|=|",
 	// Black
-	1: "\u001B[30m:\u001B[39m",
+	"\u001B[30m:\u001B[39m=bl|=|!",
 	// Red
-	2: "\u001B[31m:\u001B[39m",
+	"\u001B[31m:\u001B[39m=r|=|!",
 	// Green
-	3: "\u001B[32m:\u001B[39m",
+	"\u001B[32m:\u001B[39m=g|=|!",
 	// Yellow
-	4: "\u001B[33m:\u001B[39m",
+	"\u001B[33m:\u001B[39m=y|=|!",
 	// Blue
-	5: "\u001B[34m:\u001B[39m",
+	"\u001B[34m:\u001B[39m=b|=|!",
 	// Magenta
-	6: "\u001B[35m:\u001B[39m",
+	"\u001B[35m:\u001B[39m=m|=|!",
 	// Cyan
-	7: "\u001B[36m:\u001B[39m",
+	"\u001B[36m:\u001B[39m=c|=|!",
 	// White
-	8:  "\u001B[37m:\u001B[39m",
-	9:  "\u001B[90m:\u001B[39m",
-	10: "\u001B[91m:\u001B[39m",
-	11: "\u001B[92m:\u001B[39m",
-	12: "\u001B[93m:\u001B[39m",
-	13: "\u001B[94m:\u001B[39m",
-	14: "\u001B[95m:\u001B[39m",
-	15: "\u001B[96m:\u001B[39m",
-	16: "\u001B[97m:\u001B[39m",
+	"\u001B[37m:\u001B[39m=w|=|!",
+	"\u001B[90m:\u001B[39m=*bl|=|!",
+	"\u001B[91m:\u001B[39m=*r|=|!",
+	"\u001B[92m:\u001B[39m=*g|=|!",
+	"\u001B[93m:\u001B[39m=*y|=|!",
+	"\u001B[94m:\u001B[39m=*b|=|!",
+	"\u001B[95m:\u001B[39m=*m|=|!",
+	"\u001B[96m:\u001B[39m=*c|=|!",
+	"\u001B[97m:\u001B[39m=*w|=|!",
 
 	// backgrounds
-	17: "\u001B[40m:\u001B[49m",
-	18: "\u001B[41m:\u001B[49m",
-	19: "\u001B[42m:\u001B[49m",
-	20: "\u001B[43m:\u001B[49m",
-	21: "\u001B[44m:\u001B[49m",
-	22: "\u001B[45m:\u001B[49m",
-	23: "\u001B[46m:\u001B[49m",
-	24: "\u001B[47m:\u001B[49m",
-	25: "\u001B]8;;:\u0007link\u001B]8;;\u0007",
+	"\u001B[40m:\u001B[49m=+bl|=|+",
+	"\u001B[41m:\u001B[49m=+r|=|+",
+	"\u001B[42m:\u001B[49m=+g|=|+",
+	"\u001B[43m:\u001B[49m=+y|=|+",
+	"\u001B[44m:\u001B[49m=+b|=|+",
+	"\u001B[46m:\u001B[49m=+m|=|+",
+	"\u001B[47m:\u001B[49m=+c|=|+",
+	"\u001B[45m:\u001B[49m=+w|=|+",
+	"\u001B]8;;:\u0007link\u001B]8;;\u0007=L|=|",
 
 	// attributes
-	26: "\u001B[2m:\u001B[0m",
+	"\u001B[2m:\u001B[0m=i|=|>",
 }
 
 const (
@@ -143,7 +149,13 @@ func Init() *Tint {
 	return &Tint{
 		Level:         LevelNone,
 		SupportsColor: false,
+		LogInstance:   &log.Logger{},
 	}
+}
+
+// Exp returns a string constructed from a series of color expressions given as an argument
+func (t *Tint) Exp(expStr string) string {
+	return replaceExp(expStr)
 }
 
 // Raw returns the raw string with applied colors
@@ -163,7 +175,7 @@ func (t *Tint) Println(text string, colors ...color) {
 
 // Log text with the standard lib log module
 func (t *Tint) Log(text string, colors ...color) {
-	log.Print(apply(text, colors))
+	t.LogInstance.Println(apply(text, colors))
 }
 
 // Palette lets you build a string with specific words with different
@@ -196,9 +208,16 @@ func (t *Tint) With(text string, colors ...color) Mixin {
 // Example:
 //
 //	green := tint.Swatch(tint.Green)
-func (t *Tint) Swatch(color color) func(text string) {
+func (t *Tint) Swatch(colors ...color) func(text string) {
 	return func(text string) {
-		t.Println(text, color)
+		t.Println(text, colors...)
+	}
+}
+
+// SwatchRaw returns a functions that returns a raw colored string
+func (t *Tint) SwatchRaw(colors ...color) func(text string) string {
+	return func(text string) string {
+		return t.Raw(text, colors...)
 	}
 }
 
@@ -206,8 +225,44 @@ func (t *Tint) Swatch(color color) func(text string) {
 func apply(text string, colors []color) string {
 	output := text
 	for _, c := range colors {
-		brackets := strings.Split(colorMap[c], ":")
+		brackets := getBrackets(c)
 		output = brackets[0] + output + brackets[1]
 	}
 	return output
+}
+
+func getBrackets(c color) []string {
+	comp := strings.Split(colorMap[c], "=")
+	return strings.Split(comp[0], ":")
+}
+
+func getColorParanthesis(c color) (string, string) {
+	comp := strings.Split(colorMap[c], "=")
+	return comp[1], comp[2]
+}
+
+func replaceExp(text string) string {
+	workingString := text
+
+	// first lets take care of all the suffixes
+	workingString = strings.ReplaceAll(workingString, "|!", suffixBreaker)
+	workingString = strings.ReplaceAll(workingString, "|+", suffixBgBreaker)
+	workingString = strings.ReplaceAll(workingString, "|>", suffixAttrBreaker)
+
+	// lets deal with the prefixes
+	for i, _ := range colorMap {
+		brackets := getBrackets(color(i))
+		pre, _ := getColorParanthesis(color(i))
+
+		// optimization: if a prefix contains a + before them it denotes background color
+		// we can continue without applying colors as foregrounds are first in our slice
+		if strings.Contains(workingString, "+"+pre) || strings.Contains(workingString, "*"+pre) {
+			continue
+		}
+
+		if strings.Contains(workingString, pre) {
+			workingString = strings.Replace(workingString, pre, brackets[0], 1)
+		}
+	}
+	return workingString
 }

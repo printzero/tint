@@ -243,14 +243,20 @@ func getColorParanthesis(c color) (string, string) {
 
 func replaceExp(text string) string {
 	workingString := text
+
+	// first lets take care of all the suffixes
 	workingString = strings.ReplaceAll(workingString, "|!", suffixBreaker)
 	workingString = strings.ReplaceAll(workingString, "|+", suffixBgBreaker)
 	workingString = strings.ReplaceAll(workingString, "|>", suffixAttrBreaker)
+
+	// lets deal with the prefixes
 	for i, _ := range colorMap {
 		brackets := getBrackets(color(i))
 		pre, _ := getColorParanthesis(color(i))
 
-		if strings.Contains(workingString, "+"+pre) {
+		// optimization: if a prefix contains a + before them it denotes background color
+		// we can continue without applying colors as foregrounds are first in our slice
+		if strings.Contains(workingString, "+"+pre) || strings.Contains(workingString, "*"+pre) {
 			continue
 		}
 

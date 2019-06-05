@@ -14,6 +14,12 @@ func TestInit(t *testing.T) {
 	}
 }
 
+func TestLoggerInstance(t *testing.T) {
+	if mod.LogInstance == nil {
+		t.Error("Log instance is nil on module init.")
+	}
+}
+
 // In general test.Raw uses apply() which is the core function of tint module
 // So in theory if we extensively test Raw() versions of all the functions
 // we will gain the same results
@@ -26,9 +32,8 @@ func TestRaw(t *testing.T) {
 }
 
 func TestRawColor(t *testing.T) {
-	brackets := strings.Split(colorMap[Green], ":")
+	brackets := getBrackets(Green)
 	greenText := mod.Raw("Yes", Green)
-
 	if !strings.HasPrefix(greenText, brackets[0]) {
 		t.Error("Raw color test failed because it is not prefixed with green color from color map")
 	}
@@ -40,8 +45,8 @@ func TestRawColor(t *testing.T) {
 
 // TestRawFandB tests foreground and background colors
 func TestRawFandB(t *testing.T) {
-	brackets := strings.Split(colorMap[Green], ":")
-	bracketsFore := strings.Split(colorMap[BgWhite], ":")
+	brackets := getBrackets(Green)
+	bracketsFore := getBrackets(BgWhite)
 
 	greenText := mod.Raw("Yes", Green, BgWhite)
 
@@ -56,7 +61,7 @@ func TestRawFandB(t *testing.T) {
 
 func TestWith(t *testing.T) {
 	m := mod.With("Yes", White)
-	
+
 	if !mixinTypeCheck(m) {
 		t.Error("With() did not return a Mixin struct.")
 	}
@@ -83,7 +88,7 @@ func TestSwatchRawToReturnFunc(t *testing.T) {
 }
 
 func TestSwatchRaw(t *testing.T) {
-	brackets := strings.Split(colorMap[Yellow], ":")
+	brackets := getBrackets(Yellow)
 
 	yellowSwatchFunc := mod.SwatchRaw(Yellow)
 

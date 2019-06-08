@@ -26,6 +26,15 @@ cyanStr := t.Raw("This is cyan colored string")
 fmt.Println(cyanStr)
 ```
 
+#### func Exp
+
+Exp returns a string constructed from a series of color expressions given as an argument.
+
+```go
+basic := t.Exp("This is a g|basic|! example")
+fmt.Println(basic)
+```
+
 #### func Print
 
 Print single line of text with specified color.

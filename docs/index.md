@@ -11,7 +11,7 @@ Tint aims to provide functions that you can use to color your cli text output.
 go get github.com/printzero/tint
 ```
 
-### Feature Walkthrough
+### Walkthrough
 
 - [Getting Started](getting_started.md)
 - [Tint Color Expression (TCE)](tint_expressions.md)

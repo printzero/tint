@@ -1,6 +1,6 @@
 ### Introduction
 
-In this document demonstrates how to use `tint` go module and it's functions. Tint has some really great functions to get you started with coloring your terminal output. We first need to import
+This document demonstrates how to use `tint` go module and it's functions. Tint has some really great functions to get you started with coloring your terminal output. We first need to import
 tint and initialize a pointer to tint. For that we have a `Init()` function.
 
 Example:
@@ -28,7 +28,7 @@ fmt.Println(cyanStr)
 
 #### func Exp
 
-Exp returns a string constructed from a series of color expressions given as an argument.
+Exp returns a string constructed from a series of [color expressions](tint_expressions.md) given as an argument.
 
 ```go
 basic := t.Exp("This is a g|basic|! example")

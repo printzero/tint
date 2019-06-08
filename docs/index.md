@@ -13,7 +13,9 @@ go get github.com/printzero/tint
 
 ### Feature Walkthrough
 
-[Getting Started](getting_started.md)
+- [Getting Started](getting_started.md)
+- [Tint Color Expression (TCE)](tint_expressions.md)
+
 
 ### Contributing to this project
 

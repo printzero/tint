@@ -71,7 +71,7 @@ func TestPalette(t *testing.T) {
 	tstr := mod.Palette(mod.With("Ashish", Blue))
 	brackets := getBrackets(Blue)
 
-	if !strings.Contains(tstr, brackets[0]) || !strings.Contains(tstr, brackets[0]) {
+	if !strings.Contains(tstr, brackets[0]) || !strings.Contains(tstr, brackets[1]) {
 		t.Error("The color 'Blue' is not applied by the Palette properly.")
 	}
 }

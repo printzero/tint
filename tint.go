@@ -45,22 +45,6 @@ const (
 	Cyan
 	// White color
 	White
-	// BlackBright color
-	BlackBright
-	// RedBright color
-	RedBright
-	// GreenBright color
-	GreenBright
-	// YellowBright color
-	YellowBright
-	// BlueBright color
-	BlueBright
-	// MagentaBright color
-	MagentaBright
-	// CyanBright color
-	CyanBright
-	// WhiteBright color
-	WhiteBright
 
 	// BgBlack color
 	BgBlack
@@ -76,60 +60,60 @@ const (
 	BgMagenta
 	// BgCyan color
 	BgCyan
-	// BgWhite color
+	// BgLightGrey color
+	BgLightGrey
+	// White background
 	BgWhite
 	// Hyperlink text
 	Hyperlink
 	// Dim text
 	Dim
+	// Bold text
+	Bold
 
 	// internal constants
-	suffixBreaker     = "\u001B[39m"
-	suffixBgBreaker   = "\u001B[49m"
-	suffixAttrBreaker = "\u001B[0m"
+	suffixBreaker     = "\x1b[39m"
+	suffixBgBreaker   = "\x1b[49m"
+	suffixAttrBreaker = "\x1b[0m"
 )
 
 var colorMap = []string{
 	// Normal
 	":=def|=|",
 	// Black
-	"\u001B[30m:\u001B[39m=bl|=|!",
+	"\x1b[30m:\x1b[39m=bl|=|!",
 	// Red
-	"\u001B[31m:\u001B[39m=r|=|!",
+	"\x1b[31m:\x1b[39m=r|=|!",
 	// Green
-	"\u001B[32m:\u001B[39m=g|=|!",
+	"\x1b[32m:\x1b[39m=g|=|!",
 	// Yellow
-	"\u001B[33m:\u001B[39m=y|=|!",
+	"\x1b[33m:\x1b[39m=y|=|!",
 	// Blue
-	"\u001B[34m:\u001B[39m=b|=|!",
+	"\x1b[34m:\x1b[39m=b|=|!",
 	// Magenta
-	"\u001B[35m:\u001B[39m=m|=|!",
+	"\x1b[35m:\x1b[39m=m|=|!",
 	// Cyan
-	"\u001B[36m:\u001B[39m=c|=|!",
+	"\x1b[36m:\x1b[39m=c|=|!",
 	// White
-	"\u001B[37m:\u001B[39m=w|=|!",
-	"\u001B[90m:\u001B[39m=*bl|=|!",
-	"\u001B[91m:\u001B[39m=*r|=|!",
-	"\u001B[92m:\u001B[39m=*g|=|!",
-	"\u001B[93m:\u001B[39m=*y|=|!",
-	"\u001B[94m:\u001B[39m=*b|=|!",
-	"\u001B[95m:\u001B[39m=*m|=|!",
-	"\u001B[96m:\u001B[39m=*c|=|!",
-	"\u001B[97m:\u001B[39m=*w|=|!",
+	"\x1b[37m:\x1b[39m=w|=|!",
 
 	// backgrounds
-	"\u001B[40m:\u001B[49m=+bl|=|+",
-	"\u001B[41m:\u001B[49m=+r|=|+",
-	"\u001B[42m:\u001B[49m=+g|=|+",
-	"\u001B[43m:\u001B[49m=+y|=|+",
-	"\u001B[44m:\u001B[49m=+b|=|+",
-	"\u001B[46m:\u001B[49m=+m|=|+",
-	"\u001B[47m:\u001B[49m=+c|=|+",
-	"\u001B[45m:\u001B[49m=+w|=|+",
-	"\u001B]8;;:\u0007link\u001B]8;;\u0007=L|=|",
+	"\x1b[40m:\x1b[49m=+bl|=|+",
+	"\x1b[41m:\x1b[49m=+r|=|+",
+	"\x1b[42m:\x1b[49m=+g|=|+",
+	"\x1b[43m:\x1b[49m=+y|=|+",
+	"\x1b[44m:\x1b[49m=+b|=|+",
+	"\x1b[45m:\x1b[49m=+m|=|+",
+	"\x1b[46m:\x1b[49m=+c|=|+",
+	"\x1b[47m:\x1b[49m=+w|=|+",
+	"\x1b[1077m:\x1b[49m=+w|=|+",
+
+	// hyperlink
+	"\x1b]8;;:\u0007link\x1b]8;;\u0007=L|=|",
 
 	// attributes
-	"\u001B[2m:\u001B[0m=i|=|>",
+	"\x1b[2m:\x1b[22m=i|=|>",
+	"\x1b[1m:\x1b[21m=i|=|>",
 }
 
 const (

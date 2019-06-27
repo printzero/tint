@@ -32,29 +32,25 @@ func TestRaw(t *testing.T) {
 }
 
 func TestRawColor(t *testing.T) {
-	brackets := getBrackets(Green)
 	greenText := mod.Raw("Yes", Green)
-	if !strings.HasPrefix(greenText, brackets[0]) {
+	if !strings.HasPrefix(greenText, Green.open) {
 		t.Error("Raw color test failed because it is not prefixed with green color from color map")
 	}
 
-	if !strings.HasSuffix(greenText, brackets[1]) {
+	if !strings.HasSuffix(greenText, Green.close) {
 		t.Error("Raw color test failed because it is not suffixed with green color from color map")
 	}
 }
 
 // TestRawFandB tests foreground and background colors
 func TestRawFandB(t *testing.T) {
-	brackets := getBrackets(Green)
-	bracketsFore := getBrackets(BgWhite)
-
 	greenText := mod.Raw("Yes", Green, BgWhite)
 
-	if !strings.HasPrefix(greenText, bracketsFore[0]+brackets[0]) {
+	if !strings.HasPrefix(greenText, BgWhite.open+Green.open) {
 		t.Error("Foreground and Background tests failed order of prefix not correct.")
 	}
 
-	if !strings.HasSuffix(greenText, brackets[1]+bracketsFore[1]) {
+	if !strings.HasSuffix(greenText, Green.close+BgWhite.close) {
 		t.Error("Foreground and Background tests failed order of suffix not correct.")
 	}
 }
@@ -69,9 +65,8 @@ func TestWith(t *testing.T) {
 
 func TestPalette(t *testing.T) {
 	tstr := mod.Palette(mod.With("Ashish", Blue))
-	brackets := getBrackets(Blue)
 
-	if !strings.Contains(tstr, brackets[0]) || !strings.Contains(tstr, brackets[1]) {
+	if !strings.Contains(tstr, Blue.open) || !strings.Contains(tstr, Blue.close) {
 		t.Error("The color 'Blue' is not applied by the Palette properly.")
 	}
 }
@@ -97,31 +92,23 @@ func TestSwatchRawToReturnFunc(t *testing.T) {
 }
 
 func TestSwatchRaw(t *testing.T) {
-	brackets := getBrackets(Yellow)
-
 	yellowSwatchFunc := mod.SwatchRaw(Yellow)
 
 	result := yellowSwatchFunc("Yes")
 
-	if !strings.HasPrefix(result, brackets[0]) {
+	if !strings.HasPrefix(result, Yellow.open) {
 		t.Error("Swatch did not have prefix of Yellow color", result)
 	}
 
-	if !strings.HasSuffix(result, brackets[1]) {
+	if !strings.HasSuffix(result, Yellow.close) {
 		t.Error("Swatch did not have suffix of Yellow color", result)
 	}
 }
 
 func TestExp(t *testing.T) {
-	estr := mod.Exp("y|Ashish|!")
-	wrongEstr := mod.Exp("y|Ashish|")
-	brackets := getBrackets(Yellow)
-	if !strings.Contains(estr, brackets[0]) || !strings.Contains(estr, brackets[1]) {
+	estr := mod.Exp("@(Ashish)", Yellow)
+	if !strings.Contains(estr, Yellow.open) || !strings.Contains(estr, Yellow.close) {
 		t.Error("Yellow color is not applied properly by tint.Expr(). Both brackets must be present.")
-	}
-
-	if strings.Contains(wrongEstr, suffixBreaker) {
-		t.Errorf("When specifying an errored suffix of tint expression, this should not be present for (%s)", wrongEstr)
 	}
 }
 

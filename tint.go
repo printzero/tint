@@ -3,7 +3,6 @@ package tint
 import (
 	"fmt"
 	"log"
-	"strings"
 )
 
 // Tint struct holds the whole library
@@ -18,7 +17,52 @@ type Tint struct {
 type TerminalLevel int
 
 // Color Default that support the terminal
-type color int
+type color struct {
+	open  string
+	close string
+}
+
+func (c color) Dim() color {
+	return color{
+		open:  "\u001b[2m" + c.open,
+		close: c.close + "\u001b[0m",
+	}
+}
+
+func (c color) Bold() color {
+	return color{
+		open:  "\u001b[1m" + c.open,
+		close: c.close + "\u001b[0m",
+	}
+}
+
+func (c color) Underline() color {
+	return color{
+		open:  "\u001b[4m" + c.open,
+		close: c.close + "\u001b[0m",
+	}
+}
+
+func (c color) Italic() color {
+	return color{
+		open:  "\u001b[3m" + c.open,
+		close: c.close + "\u001b[0m",
+	}
+}
+
+func (c color) Strike() color {
+	return color{
+		open:  "\u001b[9m" + c.open,
+		close: c.close + "\u001b[0m",
+	}
+}
+
+func (c color) Add(this color) color {
+	return color{
+		open:  c.open + this.open,
+		close: this.close + c.close,
+	}
+}
 
 // Mixin helps bind a color to a specific text
 type Mixin struct {
@@ -26,95 +70,116 @@ type Mixin struct {
 	colors []color
 }
 
-const (
-	// Normal equates to no style
-	Normal color = iota
-	// Black color brackets in ansi format
-	Black
-	// Red color
-	Red
-	// Green color
-	Green
-	// Yellow color
-	Yellow
-	// Blue color
-	Blue
-	// Magenta color
-	Magenta
-	// Cyan color
-	Cyan
-	// White color
-	White
-
-	// BgBlack color
-	BgBlack
-	// BgRed color
-	BgRed
-	// BgGreen color
-	BgGreen
-	// BgYellow color
-	BgYellow
-	// BgBlue color
-	BgBlue
-	// BgMagenta color
-	BgMagenta
-	// BgCyan color
-	BgCyan
-	// BgLightGrey color
-	BgLightGrey
-	// White background
-	BgWhite
-	// Hyperlink text
-	Hyperlink
-	// Dim text
-	Dim
-	// Bold text
-	Bold
-
-	// internal constants
-	suffixBreaker     = "\x1b[39m"
-	suffixBgBreaker   = "\x1b[49m"
-	suffixAttrBreaker = "\x1b[0m"
-)
-
-var colorMap = []string{
-	// Normal
-	":=def|=|",
-	// Black
-	"\x1b[30m:\x1b[39m=bl|=|!",
-	// Red
-	"\x1b[31m:\x1b[39m=r|=|!",
-	// Green
-	"\x1b[32m:\x1b[39m=g|=|!",
-	// Yellow
-	"\x1b[33m:\x1b[39m=y|=|!",
-	// Blue
-	"\x1b[34m:\x1b[39m=b|=|!",
-	// Magenta
-	"\x1b[35m:\x1b[39m=m|=|!",
-	// Cyan
-	"\x1b[36m:\x1b[39m=c|=|!",
-	// White
-	"\x1b[37m:\x1b[39m=w|=|!",
-
-	// backgrounds
-	"\x1b[40m:\x1b[49m=+bl|=|+",
-	"\x1b[41m:\x1b[49m=+r|=|+",
-	"\x1b[42m:\x1b[49m=+g|=|+",
-	"\x1b[43m:\x1b[49m=+y|=|+",
-	"\x1b[44m:\x1b[49m=+b|=|+",
-	"\x1b[45m:\x1b[49m=+m|=|+",
-	"\x1b[46m:\x1b[49m=+c|=|+",
-	"\x1b[47m:\x1b[49m=+w|=|+",
-	"\x1b[1077m:\x1b[49m=+w|=|+",
-
-	// hyperlink
-	"\x1b]8;;:\u0007link\x1b]8;;\u0007=L|=|",
-
-	// attributes
-	"\x1b[2m:\x1b[22m=i|=|>",
-	"\x1b[1m:\x1b[21m=i|=|>",
+// Normal equates to no style
+var Normal = color{
+	open:  "\u001b[0m",
+	close: "\u001b[0m",
 }
+
+// Black color brackets in ansi format
+var Black = color{
+	open:  "\u001b[30m",
+	close: "\u001b[39m",
+}
+
+// Red color
+var Red = color{
+	open:  "\u001b[31m",
+	close: "\u001b[39m",
+}
+
+// Green color
+var Green = color{
+	open:  "\u001b[32m",
+	close: "\u001b[39m",
+}
+
+// Yellow color
+var Yellow = color{
+	open:  "\u001b[33m",
+	close: "\u001b[39m",
+}
+
+// Blue color
+var Blue = color{
+	open:  "\u001b[34m",
+	close: "\u001b[39m",
+}
+
+// Magenta color
+var Magenta = color{
+	open:  "\u001b[35m",
+	close: "\u001b[39m",
+}
+
+// Cyan color
+var Cyan = color{
+	open:  "\u001b[36m",
+	close: "\u001b[39m",
+}
+
+// White color
+var White = color{
+	open:  "\u001b[37m",
+	close: "\u001b[39m",
+}
+
+// BgBlack color
+var BgBlack = color{
+	open:  "\u001b[40m",
+	close: "\u001b[49m",
+}
+
+// BgRed color
+var BgRed = color{
+	open:  "\u001b[41m",
+	close: "\u001b[49m",
+}
+
+// BgGreen color
+var BgGreen = color{
+	open:  "\u001b[42m",
+	close: "\u001b[49m",
+}
+
+// BgYellow color
+var BgYellow = color{
+	open:  "\u001b[43m",
+	close: "\u001b[49m",
+}
+
+// BgBlue color
+var BgBlue = color{
+	open:  "\u001b[44m",
+	close: "\u001b[49m",
+}
+
+// BgMagenta color
+var BgMagenta = color{
+	open:  "\u001b[45m",
+	close: "\u001b[49m",
+}
+
+// BgCyan color
+var BgCyan = color{
+	open:  "\u001b[46m",
+	close: "\u001b[49m",
+}
+
+// BgLightGrey color
+var BgLightGrey = color{
+	open:  "\u001b[47m",
+	close: "\u001b[49m",
+}
+
+// White background
+var BgWhite = color{
+	open:  "\u001b[107m",
+	close: "\u001b[49m",
+}
+
+// Hyperlink text
+//Hyperlink
 
 const (
 	// LevelNone for terminal that supports no colot
@@ -138,8 +203,8 @@ func Init() *Tint {
 }
 
 // Exp returns a string constructed from a series of color expressions given as an argument
-func (t *Tint) Exp(expStr string) string {
-	return replaceExp(expStr)
+func (t *Tint) Exp(expStr string, colors ...color) string {
+	return replaceExp(expStr, colors)
 }
 
 // Raw returns the raw string with applied colors
@@ -209,44 +274,69 @@ func (t *Tint) SwatchRaw(colors ...color) func(text string) string {
 func apply(text string, colors []color) string {
 	output := text
 	for _, c := range colors {
-		brackets := getBrackets(c)
-		output = brackets[0] + output + brackets[1]
+		output = c.open + output + c.close
 	}
 	return output
 }
 
-func getBrackets(c color) []string {
-	comp := strings.Split(colorMap[c], "=")
-	return strings.Split(comp[0], ":")
-}
+func replaceExp(text string, colors []color) string {
 
-func getColorParanthesis(c color) (string, string) {
-	comp := strings.Split(colorMap[c], "=")
-	return comp[1], comp[2]
-}
+	if tc, proceed := isAtCountSame(text, len(colors)); !proceed {
+		//tintedError := replaceExp(, []color{Magenta.Bold()})
+		panic(fmt.Errorf("mismatching apply - Trigger count: %d, Color count: %d \n\n%sTip%s: Does your function have colors passed as much as it has '@' character?", tc, len(colors), Magenta.open, Magenta.close))
+		return text
+	}
 
-func replaceExp(text string) string {
-	workingString := text
+	workingString := ""
+	workingColors := colors
 
-	// first lets take care of all the suffixes
-	workingString = strings.ReplaceAll(workingString, "|!", suffixBreaker)
-	workingString = strings.ReplaceAll(workingString, "|+", suffixBgBreaker)
-	workingString = strings.ReplaceAll(workingString, "|>", suffixAttrBreaker)
+	// this is used as the current color on operation
+	//var colorStart int
+	//var colorEnd = -1
+	var colorBox = White
+	var triggered = false
 
-	// lets deal with the prefixes
-	for i, _ := range colorMap {
-		brackets := getBrackets(color(i))
-		pre, _ := getColorParanthesis(color(i))
-
-		// optimization: if a prefix contains a + before them it denotes background color
-		// we can continue without applying colors as foregrounds are first in our slice
-		if strings.Contains(workingString, "+"+pre) || strings.Contains(workingString, "*"+pre) {
+	// so here is what we'll do --- we'll find the first #( which serves as opening
+	// of a color expression, and then look for the next close with colorBox in memory
+	for i, c := range text {
+		if string(c) == "@" && string(text[i+1]) == "(" {
+			triggered = true
+			workingString = workingString + ""
+			continue
+		} else if triggered && string(c) == "(" {
+			colorBox = workingColors[0]
+			workingString = workingString + colorBox.open
+			continue
+		} else if triggered && string(c) == ")" {
+			triggered = false
+			workingString = workingString + colorBox.close
+			colorBox = White
+			workingColors = workingColors[1:]
 			continue
 		}
 
-		if strings.Contains(workingString, pre) {
-			workingString = strings.Replace(workingString, pre, brackets[0], 1)
+		workingString = workingString + colorBox.open + string(c) + colorBox.close
+	}
+
+	return workingString
+}
+
+func isAtCountSame(text string, colorCount int) (int, bool) {
+	counter := 0
+	for i, c := range text {
+		if string(c) == "@" && string(text[i+1]) == "(" {
+			counter += 1
 		}
 	}
-	return workingString
+
+	return counter, counter == colorCount
+}
+
+func indexOf(text string, char string) int {
+	for i, s := range text {
+		if string(s) == char {
+			return i
+		}
+	}
+	return -1
 }

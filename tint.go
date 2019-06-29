@@ -87,12 +87,6 @@ func (c color) Add(this color) color {
 	}
 }
 
-// Mixin helps bind a color to a specific text
-type Mixin struct {
-	text   string
-	colors []color
-}
-
 // Normal equates to no style
 var Normal = color{
 	open:  "\u001b[0m",
@@ -257,31 +251,6 @@ func (t *Tint) Log(text string, colors ...color) {
 	t.LogInstance.Println(apply(text, colors))
 }
 
-// Palette lets you build a string with specific words with different
-// background or foreground color of your choice
-// NOTE: no need to specify space character at end of mixin
-func (t *Tint) Palette(mixins ...Mixin) string {
-	output := ""
-
-	// for each mixins in this palette
-	for i, m := range mixins {
-		if i == 0 {
-			output = apply(m.text, m.colors)
-		} else {
-			output = output + " " + apply(m.text, m.colors)
-		}
-	}
-
-	return output
-}
-
-// With is used to build a Mixin with text and color
-func (t *Tint) With(text string, colors ...color) Mixin {
-	return Mixin{
-		text,
-		colors,
-	}
-}
 // Swatch will return a function for specific colors given as a parameter.
 func (t *Tint) Swatch(colors ...color) func(text string) {
 	return func(text string) {

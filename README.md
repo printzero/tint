@@ -2,7 +2,12 @@
     <img src="https://raw.githubusercontent.com/printzero/tint/master/assets/tint_logo.png" width="400" height="225">
 </p>
 
-Tint aims to provide functions that you can use to color your cli text output.
+Tint aims to provide functions that you can use to color your cli text output. This project is originally written to be used 
+in the project called [orb](https://github.com/orbpkg/orb) which I'm currently working on. It resolves some of my concerns
+about the state of terminal styling implemented in Go.
+
+
+[![GoDoc](https://godoc.org/github.com/printzero/tint?status.svg)](https://godoc.org/github.com/printzero/tint)
 
 ### Import
 
@@ -64,8 +69,10 @@ var yellow func(text string)
 
 func main() {
 	t := tint.Init()
+	
 	green = t.Swatch(tint.Green)
 	yellow = t.Swatch(tint.Yellow)
+	
 	yellow("Waiting for 2 seconds just for fun ...")
 	time.Sleep(time.Second * 2)
 	green("I give you a green light")
@@ -100,12 +107,11 @@ func main() {
 
 ### Contributing to this project
 
-First step is to read the [contributing](https://github.com/printzero/tint/blob/master/CONTIBUTING.md) and comment on an issue "".
+Take a look at this [CONTIBUTING.md](https://github.com/printzero/tint/blob/master/CONTIBUTING.md).
 
 ### Github Project Board
 
 I use this github project [board](https://github.com/printzero/tint/projects/1) to track changes for this project and any new feature, bug or ideas for upcoming releases are posted here.
-
 
 
 ### License

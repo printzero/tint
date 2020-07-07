@@ -39,6 +39,14 @@ type Tint struct {
 // current terminal that is useful to tint.
 type TerminalLevel int
 
+// SwatchFunc is what a tint.Swatch returns after adding color sequences
+type SwatchFunc func(text string)
+
+// SwatchFuncRaw is what a tint.SwatchRaw returns which inturn returns a
+// colored string output. These methods can be used as higher-order functions
+// for coloring
+type SwatchFuncRaw func(text string) string
+
 // Color is a struct that holds the innate escape characters for color variables.
 type color struct {
 	open  string // opening escape character for a given color
@@ -258,14 +266,14 @@ func (t *Tint) Log(text string, colors ...color) {
 }
 
 // Swatch will return a function for specific colors given as a parameter.
-func (t *Tint) Swatch(colors ...color) func(text string) {
+func (t *Tint) Swatch(colors ...color) SwatchFunc {
 	return func(text string) {
 		t.Println(text, colors...)
 	}
 }
 
 // SwatchRaw returns a functions that returns a raw colored string
-func (t *Tint) SwatchRaw(colors ...color) func(text string) string {
+func (t *Tint) SwatchRaw(colors ...color) SwatchFuncRaw {
 	return func(text string) string {
 		return t.Raw(text, colors...)
 	}

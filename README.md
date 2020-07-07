@@ -32,7 +32,7 @@ t := tint.Init()
 Tint has some functions that let you directly color your terminal output, Example:
 
 ```go
-t.Println("This is an error", t.Red)
+t.Println("This is an error", tint.Red)
 ```
 
 this function is equivalent to `fmt.Println()`, but notice the extra parameter passed. This is a color constant.
@@ -64,8 +64,8 @@ import (
 	"tint"
 	)
 
-var green func(text string)
-var yellow func(text string)
+var green tint.SwatchFunc
+var yellow tint.SwatchFunc
 
 func main() {
 	t := tint.Init()
@@ -90,8 +90,8 @@ import (
 	"tint"
 	)
 
-var green func(text string) string
-var yellow func(text string) string
+var green tint.SwatchFuncRaw
+var yellow tint.SwatchFuncRaw
 
 func main() {
 	t := tint.Init()

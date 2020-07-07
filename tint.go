@@ -13,8 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
-
-// This document demonstrates the working of tint: a minimal bare-bone version of terminal styling implemented for
+// Package tint is a minimal bare-bone version of terminal styling implemented for
 // Go applications with no external dependencies.
 // It provides you with different types of functions that you can use to style your terminal output with ease.
 //
@@ -26,6 +25,7 @@ package tint
 import (
 	"fmt"
 	"log"
+	"runtime"
 )
 
 // Tint struct holds the whole library
@@ -45,38 +45,40 @@ type color struct {
 	close string // closing escape character for a given color
 }
 
+var escSeq = "\u001b"
+
 func (c color) Dim() color {
 	return color{
-		open:  "\u001b[2m" + c.open,
-		close: c.close + "\u001b[0m",
+		open:  escSeq + "[2m" + c.open,
+		close: c.close + escSeq + "[0m",
 	}
 }
 
 func (c color) Bold() color {
 	return color{
-		open:  "\u001b[1m" + c.open,
-		close: c.close + "\u001b[0m",
+		open:  escSeq + "[1m" + c.open,
+		close: c.close + escSeq + "[0m",
 	}
 }
 
 func (c color) Underline() color {
 	return color{
-		open:  "\u001b[4m" + c.open,
-		close: c.close + "\u001b[0m",
+		open:  escSeq + "[4m" + c.open,
+		close: c.close + escSeq + "[0m",
 	}
 }
 
 func (c color) Italic() color {
 	return color{
-		open:  "\u001b[3m" + c.open,
-		close: c.close + "\u001b[0m",
+		open:  escSeq + "[3m" + c.open,
+		close: c.close + escSeq + "[0m",
 	}
 }
 
 func (c color) Strike() color {
 	return color{
-		open:  "\u001b[9m" + c.open,
-		close: c.close + "\u001b[0m",
+		open:  escSeq + "[9m" + c.open,
+		close: c.close + escSeq + "[0m",
 	}
 }
 
@@ -89,110 +91,110 @@ func (c color) Add(this color) color {
 
 // Normal equates to no style
 var Normal = color{
-	open:  "\u001b[0m",
-	close: "\u001b[0m",
+	open:  escSeq + "[0m",
+	close: escSeq + "[0m",
 }
 
 // Black color
 var Black = color{
-	open:  "\u001b[30m",
-	close: "\u001b[39m",
+	open:  escSeq + "[30m",
+	close: escSeq + "[39m",
 }
 
 // Red color
 var Red = color{
-	open:  "\u001b[31m",
-	close: "\u001b[39m",
+	open:  escSeq + "[31m",
+	close: escSeq + "[39m",
 }
 
 // Green color
 var Green = color{
-	open:  "\u001b[32m",
-	close: "\u001b[39m",
+	open:  escSeq + "[32m",
+	close: escSeq + "[39m",
 }
 
 // Yellow color
 var Yellow = color{
-	open:  "\u001b[33m",
-	close: "\u001b[39m",
+	open:  escSeq + "[33m",
+	close: escSeq + "[39m",
 }
 
 // Blue color
 var Blue = color{
-	open:  "\u001b[34m",
-	close: "\u001b[39m",
+	open:  escSeq + "[34m",
+	close: escSeq + "[39m",
 }
 
 // Magenta color
 var Magenta = color{
-	open:  "\u001b[35m",
-	close: "\u001b[39m",
+	open:  escSeq + "[35m",
+	close: escSeq + "[39m",
 }
 
 // Cyan color
 var Cyan = color{
-	open:  "\u001b[36m",
-	close: "\u001b[39m",
+	open:  escSeq + "[36m",
+	close: escSeq + "[39m",
 }
 
 // White color
 var White = color{
-	open:  "\u001b[37m",
-	close: "\u001b[39m",
+	open:  escSeq + "[37m",
+	close: escSeq + "[39m",
 }
 
 // BgBlack applies Black Background color
 var BgBlack = color{
-	open:  "\u001b[40m",
-	close: "\u001b[49m",
+	open:  escSeq + "[40m",
+	close: escSeq + "[49m",
 }
 
 // BgRed applies Red Background color
 var BgRed = color{
-	open:  "\u001b[41m",
-	close: "\u001b[49m",
+	open:  escSeq + "[41m",
+	close: escSeq + "[49m",
 }
 
 // BgGreen applies Green Background color
 var BgGreen = color{
-	open:  "\u001b[42m",
-	close: "\u001b[49m",
+	open:  escSeq + "[42m",
+	close: escSeq + "[49m",
 }
 
 // BgYellow applies Yellow Background color
 var BgYellow = color{
-	open:  "\u001b[43m",
-	close: "\u001b[49m",
+	open:  escSeq + "[43m",
+	close: escSeq + "[49m",
 }
 
 // BgBlue applies Blue Background color
 var BgBlue = color{
-	open:  "\u001b[44m",
-	close: "\u001b[49m",
+	open:  escSeq + "[44m",
+	close: escSeq + "[49m",
 }
 
 // BgMagenta applies Magenta Background color
 var BgMagenta = color{
-	open:  "\u001b[45m",
-	close: "\u001b[49m",
+	open:  escSeq + "[45m",
+	close: escSeq + "[49m",
 }
 
 // BgCyan applies Cyan Background color
 var BgCyan = color{
-	open:  "\u001b[46m",
-	close: "\u001b[49m",
+	open:  escSeq + "[46m",
+	close: escSeq + "[49m",
 }
 
 // BgLightGrey applies Light Grey Background color
 var BgLightGrey = color{
-	open:  "\u001b[47m",
-	close: "\u001b[49m",
+	open:  escSeq + "[47m",
+	close: escSeq + "[49m",
 }
 
 // BgWhite applies White Background color
 var BgWhite = color{
-	open:  "\u001b[107m",
-	close: "\u001b[49m",
+	open:  escSeq + "[107m",
+	close: escSeq + "[49m",
 }
 
 // Hyperlink text
@@ -212,6 +214,10 @@ const (
 // Init initializes variables that tint uses and then returns the
 // pointer to a Tint struct
 func Init() *Tint {
+	if runtime.GOOS == "windows" {
+		escSeq = "\033"
+	}
+
 	return &Tint{
 		Level:         LevelNone,
 		SupportsColor: false,
@@ -275,12 +281,10 @@ func apply(text string, colors []color) string {
 }
 
 func replaceExp(text string, colors []color) string {
-
 	if tc, proceed := isAtCountSame(text, len(colors)); !proceed {
-		//tintedError := replaceExp(, []color{Magenta.Bold()})
-		panic(fmt.Errorf("mismatching apply - Trigger count: %d, Color count: %d \n\n%sTip%s: Does your function have colors passed as much as it has '@' character?",
-			tc, len(colors), Magenta.open, Magenta.close))
-		return text
+		msg := "mismatching apply - Trigger count: %d, Color count: %d \n\n%sTip%s: " +
+			"Does your function have colors passed as much as it has '@' character?"
+		panic(fmt.Errorf(msg, tc, len(colors), Magenta.open, Magenta.close))
 	}
 
 	workingString := ""
@@ -311,7 +315,7 @@ func replaceExp(text string, colors []color) string {
 			continue
 		}
 
-		workingString = workingString + colorBox.open + string(c) + colorBox.close
+		workingString = workingString + string(c)
 	}
 
 	return workingString
@@ -321,7 +325,7 @@ func isAtCountSame(text string, colorCount int) (int, bool) {
 	counter := 0
 	for i, c := range text {
 		if string(c) == "@" && string(text[i+1]) == "(" {
-			counter += 1
+			counter++
 		}
 	}
 

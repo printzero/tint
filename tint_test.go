@@ -55,22 +55,6 @@ func TestRawFandB(t *testing.T) {
 	}
 }
 
-func TestWith(t *testing.T) {
-	m := mod.With("Yes", White)
-
-	if !mixinTypeCheck(m) {
-		t.Error("With() did not return a Mixin struct.")
-	}
-}
-
-func TestPalette(t *testing.T) {
-	tstr := mod.Palette(mod.With("Ashish", Blue))
-
-	if !strings.Contains(tstr, Blue.open) || !strings.Contains(tstr, Blue.close) {
-		t.Error("The color 'Blue' is not applied by the Palette properly.")
-	}
-}
-
 func TestSwatch(t *testing.T) {
 	yellowSwatchFunc := mod.Swatch(Yellow)
 
@@ -115,15 +99,6 @@ func TestExp(t *testing.T) {
 func tintTypeCheck(value interface{}) bool {
 	switch value.(type) {
 	case Tint:
-		return true
-	default:
-		return false
-	}
-}
-
-func mixinTypeCheck(value interface{}) bool {
-	switch value.(type) {
-	case Mixin:
 		return true
 	default:
 		return false

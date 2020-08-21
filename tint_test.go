@@ -96,6 +96,17 @@ func TestExp(t *testing.T) {
 	}
 }
 
+func TestExpf(t *testing.T) {
+	estr := mod.Expf("@(%s)", []Color{Yellow}, "Ashish")
+	if !strings.Contains(estr, Yellow.open) || !strings.Contains(estr, Yellow.close) {
+		t.Error("Yellow color is not applied properly by tint.Expr(). Both brackets must be present.")
+	}
+
+	if !strings.Contains(estr, "Ashish") {
+		t.Errorf("formatting strings did not work, couldn't find Ashish in estr: %s", estr)
+	}
+}
+
 func tintTypeCheck(value interface{}) bool {
 	switch value.(type) {
 	case Tint:

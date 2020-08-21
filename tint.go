@@ -20,6 +20,9 @@
 // Tint was originally created to use in the 'orbpkg' project: https://github.com/orbpkg/orb and uses near to 0ms
 // for processing color expressions: https://godoc.org/github.com/printzero/tint/#Tint.Exp. Although the time taken to process is directly propotional to the number
 // of characters in the string input.
+
+// Package tint is used to color your outputs to the standard streams
+// easily and effortlessly
 package tint
 
 import (
@@ -46,160 +49,168 @@ type SwatchFunc func(text string)
 // for coloring
 type SwatchFuncRaw func(text string) string
 
-// Color is a struct that holds the innate escape characters for color variables.
-type color struct {
+// Color is a struct that holds the innate escape characters for Color variables.
+type Color struct {
 	open  string // opening escape character for a given color
 	close string // closing escape character for a given color
 }
 
 var escSeq = "\033"
 
-func (c color) Dim() color {
-	return color{
+// Dim dims the foreground of terminal text
+func (c Color) Dim() Color {
+	return Color{
 		open:  escSeq + "[2m" + c.open,
 		close: c.close + escSeq + "[0m",
 	}
 }
 
-func (c color) Bold() color {
-	return color{
+// Bold applies bold style to the color you are applying to
+func (c Color) Bold() Color {
+	return Color{
 		open:  escSeq + "[1m" + c.open,
 		close: c.close + escSeq + "[0m",
 	}
 }
 
-func (c color) Underline() color {
-	return color{
+// Underline renders an underline with the target text
+func (c Color) Underline() Color {
+	return Color{
 		open:  escSeq + "[4m" + c.open,
 		close: c.close + escSeq + "[0m",
 	}
 }
 
-func (c color) Italic() color {
-	return color{
+// Italic applies italic style to your target text
+func (c Color) Italic() Color {
+	return Color{
 		open:  escSeq + "[3m" + c.open,
 		close: c.close + escSeq + "[0m",
 	}
 }
 
-func (c color) Strike() color {
-	return color{
+// Strike strikes out the target text
+func (c Color) Strike() Color {
+	return Color{
 		open:  escSeq + "[9m" + c.open,
 		close: c.close + escSeq + "[0m",
 	}
 }
 
-func (c color) Add(this color) color {
-	return color{
+// Add concats the color with the base color which
+// can be used to apply more than one colors.
+// Example: background and foreground
+func (c Color) Add(this Color) Color {
+	return Color{
 		open:  c.open + this.open,
 		close: this.close + c.close,
 	}
 }
 
 // Normal equates to no style
-var Normal = color{
+var Normal = Color{
 	open:  escSeq + "[0m",
 	close: escSeq + "[0m",
 }
 
 // Black color
-var Black = color{
+var Black = Color{
 	open:  escSeq + "[30m",
 	close: escSeq + "[39m",
 }
 
 // Red color
-var Red = color{
+var Red = Color{
 	open:  escSeq + "[31m",
 	close: escSeq + "[39m",
 }
 
 // Green color
-var Green = color{
+var Green = Color{
 	open:  escSeq + "[32m",
 	close: escSeq + "[39m",
 }
 
 // Yellow color
-var Yellow = color{
+var Yellow = Color{
 	open:  escSeq + "[33m",
 	close: escSeq + "[39m",
 }
 
 // Blue color
-var Blue = color{
+var Blue = Color{
 	open:  escSeq + "[34m",
 	close: escSeq + "[39m",
 }
 
 // Magenta color
-var Magenta = color{
+var Magenta = Color{
 	open:  escSeq + "[35m",
 	close: escSeq + "[39m",
 }
 
 // Cyan color
-var Cyan = color{
+var Cyan = Color{
 	open:  escSeq + "[36m",
 	close: escSeq + "[39m",
 }
 
 // White color
-var White = color{
+var White = Color{
 	open:  escSeq + "[37m",
 	close: escSeq + "[39m",
 }
 
 // BgBlack applies Black Background color
-var BgBlack = color{
+var BgBlack = Color{
 	open:  escSeq + "[40m",
 	close: escSeq + "[49m",
 }
 
 // BgRed applies Red Background color
-var BgRed = color{
+var BgRed = Color{
 	open:  escSeq + "[41m",
 	close: escSeq + "[49m",
 }
 
 // BgGreen applies Green Background color
-var BgGreen = color{
+var BgGreen = Color{
 	open:  escSeq + "[42m",
 	close: escSeq + "[49m",
 }
 
 // BgYellow applies Yellow Background color
-var BgYellow = color{
+var BgYellow = Color{
 	open:  escSeq + "[43m",
 	close: escSeq + "[49m",
 }
 
 // BgBlue applies Blue Background color
-var BgBlue = color{
+var BgBlue = Color{
 	open:  escSeq + "[44m",
 	close: escSeq + "[49m",
 }
 
 // BgMagenta applies Magenta Background color
-var BgMagenta = color{
+var BgMagenta = Color{
 	open:  escSeq + "[45m",
 	close: escSeq + "[49m",
 }
 
 // BgCyan applies Cyan Background color
-var BgCyan = color{
+var BgCyan = Color{
 	open:  escSeq + "[46m",
 	close: escSeq + "[49m",
 }
 
 // BgLightGrey applies Light Grey Background color
-var BgLightGrey = color{
+var BgLightGrey = Color{
 	open:  escSeq + "[47m",
 	close: escSeq + "[49m",
 }
 
 // BgWhite applies White Background color
-var BgWhite = color{
+var BgWhite = Color{
 	open:  escSeq + "[107m",
 	close: escSeq + "[49m",
 }
@@ -236,46 +247,52 @@ func Init() *Tint {
 // this function.
 //
 // Take a look at the below example.
-func (t *Tint) Exp(expStr string, colors ...color) string {
+func (t *Tint) Exp(expStr string, colors ...Color) string {
 	return replaceExp(expStr, colors)
 }
 
+// Expf does to Expression replacement with formatting
+func (t *Tint) Expf(expStr string, colors []Color, args ...interface{}) string {
+	str := replaceExp(expStr, colors)
+	return fmt.Sprintf(str, args)
+}
+
 // Raw returns the raw string with applied colors
-func (t *Tint) Raw(text string, colors ...color) string {
+func (t *Tint) Raw(text string, colors ...Color) string {
 	return apply(text, colors)
 }
 
 // Print single line of text with specified color
-func (t *Tint) Print(text string, colors ...color) {
+func (t *Tint) Print(text string, colors ...Color) {
 	fmt.Print(apply(text, colors))
 }
 
 // Println single line of text with enter character
-func (t *Tint) Println(text string, colors ...color) {
+func (t *Tint) Println(text string, colors ...Color) {
 	fmt.Println(apply(text, colors))
 }
 
 // Log text with the standard lib log module
-func (t *Tint) Log(text string, colors ...color) {
+func (t *Tint) Log(text string, colors ...Color) {
 	t.LogInstance.Println(apply(text, colors))
 }
 
 // Swatch will return a function for specific colors given as a parameter.
-func (t *Tint) Swatch(colors ...color) SwatchFunc {
+func (t *Tint) Swatch(colors ...Color) SwatchFunc {
 	return func(text string) {
 		t.Println(text, colors...)
 	}
 }
 
 // SwatchRaw returns a functions that returns a raw colored string
-func (t *Tint) SwatchRaw(colors ...color) SwatchFuncRaw {
+func (t *Tint) SwatchRaw(colors ...Color) SwatchFuncRaw {
 	return func(text string) string {
 		return t.Raw(text, colors...)
 	}
 }
 
 // apply the colors to the text by wrapping text with ANSI styling
-func apply(text string, colors []color) string {
+func apply(text string, colors []Color) string {
 	output := text
 	for _, c := range colors {
 		output = c.open + output + c.close
@@ -283,7 +300,7 @@ func apply(text string, colors []color) string {
 	return output
 }
 
-func replaceExp(text string, colors []color) string {
+func replaceExp(text string, colors []Color) string {
 	if tc, proceed := isAtCountSame(text, len(colors)); !proceed {
 		msg := "mismatching apply - Trigger count: %d, Color count: %d \n\n%sTip%s: " +
 			"Does your function have colors passed as much as it has '@' character?"

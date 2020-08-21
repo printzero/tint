@@ -13,6 +13,7 @@
  *    See the License for the specific language governing permissions and
  *    limitations under the License.
  */
+
 // Package tint is a minimal bare-bone version of terminal styling implemented for
 // Go applications with no external dependencies.
 // It provides you with different types of functions that you can use to style your terminal output with ease.
@@ -20,9 +21,6 @@
 // Tint was originally created to use in the 'orbpkg' project: https://github.com/orbpkg/orb and uses near to 0ms
 // for processing color expressions: https://godoc.org/github.com/printzero/tint/#Tint.Exp. Although the time taken to process is directly propotional to the number
 // of characters in the string input.
-
-// Package tint is used to color your outputs to the standard streams
-// easily and effortlessly
 package tint
 
 import (

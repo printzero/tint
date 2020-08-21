@@ -25,7 +25,6 @@ package tint
 import (
 	"fmt"
 	"log"
-	"runtime"
 )
 
 // Tint struct holds the whole library
@@ -53,7 +52,7 @@ type color struct {
 	close string // closing escape character for a given color
 }
 
-var escSeq = "\u001b"
+var escSeq = "\033"
 
 func (c color) Dim() color {
 	return color{
@@ -222,10 +221,6 @@ const (
 // Init initializes variables that tint uses and then returns the
 // pointer to a Tint struct
 func Init() *Tint {
-	if runtime.GOOS == "windows" {
-		escSeq = "\033"
-	}
-
 	return &Tint{
 		Level:         LevelNone,
 		SupportsColor: false,

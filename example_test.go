@@ -2,7 +2,8 @@ package tint_test
 
 import (
 	"fmt"
-	"tint"
+
+	"github.com/printzero/tint"
 )
 
 func Example() {
